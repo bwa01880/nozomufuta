@@ -1,0 +1,100 @@
+# -*- coding: utf-8 -*-
+from 朝日top import asahi_t,asahi_f#朝日新聞
+nitiji,im_a, mo_a,url_a=asahi_t()
+imgF_a,mojiF_a=asahi_f()
+from 毎日top import mainiti_t,mainiti_f#毎日新聞
+n_m,im_m,mo_m,url_m=mainiti_t()
+imgF_m,mojiF_m=mainiti_f()
+from 読売top import yomiuri_t,yomiuri_f#読売新聞
+n_y,im_y,mo_y,url_y=yomiuri_t()
+imgF_y,mojiF_y=yomiuri_f()
+from 日経top import nikei_t  #日本経済新聞
+n_n,im_n,mo_n,url_n=nikei_t()
+from 産経top import sankei_t #産経新聞
+n_s,im_s,mo_s,url_s=sankei_t()
+#n_s="";im_s="";mo_s=""
+from 時事top import jiji_t #時事新聞
+n_j,im_j,mo_j,url_j=jiji_t()
+from 日刊top import nikan_t #日刊工業新聞社
+ni_I,im_ni,mo_ni,url_nk=nikan_t()
+#im_ni="";mo_ni="";
+from 報知top import houti_t #報知新聞
+ni_h,im_h,mo_h,url_h=houti_t()
+from nhktop import nhk_t  #NHK
+ni_nh,im_nh,mo_nh,url_nh=nhk_t()
+from datetime import datetime,date
+import sys
+sys.dont_write_bytecode = True #_pycache_フォルダーを作らない
+# 日付や名前、金額を置換する --- (*4)
+
+today=datetime.now()
+niti=today.strftime('%y%m%d')
+kyo=today.hour#strftime('%H')
+# ひな形テンプレートを読む --- 
+import socket
+# コンピュータ名を取得
+pc_n= socket.gethostname()
+if pc_n=='DESKTOP-OU7B606':#富士通パソコン
+    template_html=r'C:/Users/kanji/_ひな形html/各種新聞TOPニュースver2.html'
+else:
+    template_html=r'C:/Users/kanji/趣味/.atom/_ひな形html/各種新聞TOPニュース.html'
+    
+with open(template_html, 'rt', encoding='utf-8') as fp:
+    text = fp.read()
+text=text.replace('__日付__',nitiji)
+text=text.replace('__朝日写真__',im_a)
+text=text.replace('__ura__',url_a)
+text=text.replace('__朝日文__',mo_a)
+text=text.replace('__imgLa__',imgF_a)
+text=text.replace('__jja__',mojiF_a)
+text=text.replace('__毎日写真__',im_m)
+text=text.replace('__urm__',url_m)
+text=text.replace('__毎日文__',mo_m)
+text=text.replace('__imgLm__',imgF_m)
+text=text.replace('__jjm__',mojiF_m)
+text=text.replace('__読売写真__',im_y)
+text=text.replace('__ury__',url_y)
+text=text.replace('__読売文__',mo_y)
+text=text.replace('__imgLy__',imgF_y)
+text=text.replace('__jjy__',mojiF_y)
+text=text.replace('__日経写真__',im_n)
+text=text.replace('__urn__',url_n)
+text=text.replace('__日経文__',mo_n)
+text=text.replace('__産経写真__',im_s)
+text=text.replace('__urs__',url_s)
+text=text.replace('__産経文__',mo_s)
+text=text.replace('__時事写真__',im_j)
+text=text.replace('__urj__',url_j)
+text=text.replace('__時事文__',mo_j)
+text=text.replace('__日刊写真__',im_ni)
+text=text.replace('__urnk__',url_nk)
+text=text.replace('__日刊文__',mo_ni)
+text=text.replace('__報知写真__',im_h[kyo])#im_h=list
+text=text.replace('__urh__',url_h)
+text=text.replace('__報知文__',mo_h)
+text=text.replace('__ＮＨＫ写真__',im_nh)
+text=text.replace('__urnh__',url_nh)
+text=text.replace('__ＮＨＫ文__',mo_nh)
+
+#---------一日の時間表示-----------
+itiniti_j={'1,2,3,4,5,6,7,8':'朝刊',
+           '9,10,11,12,13':'昼刊',
+           '14,15,16,17,18':'夕刊',
+           '19,20,21,22,23,24':'晩刊'
+           }
+kan=[x for i,x in enumerate(itiniti_j) if str(kyo) in x]
+jikoku=itiniti_j[kan[0]]
+#----------
+if pc_n=='DESKTOP-OU7B606':
+    outfile_html=r'C:/Users/kanji/data_html/各種新聞'+niti+jikoku+'ニュース.html'
+else:
+    outfile_html=r'C:/Users/kanji/data_html/各種新聞'+niti+jikoku+'ニュース.html'    
+with open(outfile_html, 'wt', encoding='utf-8') as fp:
+        fp.write(text)
+        
+if pc_n=='DESKTOP-OU7B606':
+    outfile_htm='D:/data_html\\各種新聞'+niti+jikoku+'ニュース.html'
+else:
+    outfile_htm='F:\\data_html\\各種新聞'+niti+jikoku+'ニュース.html'
+with open(outfile_htm, 'wt', encoding='utf-8') as fp:
+        fp.write(text)
